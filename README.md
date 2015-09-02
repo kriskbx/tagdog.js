@@ -29,6 +29,9 @@ Tagdog automatically adds two elements to the element that wrapping your origina
 
 You can write your tags into the original input field, then press the `Enter` or `,` in order to add tags to Tagdog. Click the tag elements or press `Backspace` in order to delete them. You can also use the intsnace API to manipulate the tag field, adding and removing tags, for example.
 
+#### tl;dr
+Here's a live example of [Tagdog in action](https://showcase.letmeco.de/tagdog/).
+
 
 ## 3. Implementation and instatiation
 To create one or more instances of Tagdog you just need to import the Tagdog JavaScript into your HTML. You should put it as close as possible before any scripts or modules that make use of Tagdog, and the closing `body` tag, like this:
@@ -48,7 +51,7 @@ To create one or more instances of Tagdog you just need to import the Tagdog Jav
 </html>
 ```
 
-The variable `tagFields` now holds the Tagdog instance, which offers a set of [methods](#) to manipulate your tag field.
+The variable `tagFields` now holds the Tagdog instance, which offers a set of [methods](#user-content-5-the-tagdog-api) to manipulate your tag field.
 
 
 ## 4. Selectors and options
