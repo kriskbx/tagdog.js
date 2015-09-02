@@ -69,13 +69,7 @@
 		
 		var form = document.querySelector('.tagdog form'),
 				preview = document.querySelector('.preview'),
-				tags = tagdog('.tagdog-field', {
-					patterns: [{
-						regex: /^\s+|\s+$/g
-					}, {
-						regex: /[^a-zäöüß0-9-]+/gi
-					}]
-				});
+				tags = tagdog('.tagdog-field');
 
 		function submitHandler(event) {
 			var html = [], key, tagString;

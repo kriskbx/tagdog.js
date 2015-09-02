@@ -236,7 +236,7 @@
 	// Cleans tag names of unwanted characters.
 	Tagdog.prototype.cleanTagName = function cleanTagName(tagName) {
 		return this.patterns.reduce(function(tagName, pattern) {
-			return tagName.replace(pattern.regex, pattern.replace);
+			return tagName.replace(pattern.regex, pattern.replace || "");
 		}, tagName);
 	};
 
