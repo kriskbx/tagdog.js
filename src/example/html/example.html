@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="de-DE">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>tagdog.js Demo</title>
+
+	<link rel="stylesheet" type="text/css" media="screen" href="example-assets/css/reset.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="tagdog/css/tagdog.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="example-assets/css/style.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="https://fonts.googleapis.com/css?family=Raleway:300,400,800">
+
+</head>
+<body>
+	
+	<header role="banner">
+		<h1>tagdog.js</h1>
+		<p>A simple, UI-enhancing and mobile-optimized JavaScript plugin that turns text input fields into tag fields.</p>
+		<p>Write a tag into an input field, then press the <code>,</code> or <code>enter</code> key. Tagdog will create a tag for you. Delete tags by clicking on them or by pressing <code>backspace</code> when the input field is empty.</p>
+	</header>
+	
+	<div class="main" role="main">
+		<section class="tagdog">
+			<form action="" method="POST">
+				<div class="tagdog-field">
+					<label for="interests">Interests</label>
+					<input type="text" id="interests" name="interests" value="code,coffee,music" placeholder="Divide tags by comma" />
+				</div>
+
+				<div class="tagdog-field">
+					<label for="technologies">Technologies</label>
+					<input type="text" id="technologies" name="technologies" value="Node,JavaScript,CSS,HTML" placeholder="Divide tags by comma" />
+				</div>
+
+				<div>
+					<button class="button">Submit</button>
+				</div>
+			</form>
+		</section>
+
+		<section class="preview"></section>
+	</div>
+	
+	<footer>
+		<ul class="horizontal-list">
+			<li>Created by <a title="Visit me and hire me" href="https://letmeco.de">Letmecode</a></li>
+			<li>Look, ma! No jQuery!</li>
+			<li>Tagdog is <a title="Do what thou wilt shall be the whole of the Law" href="http://opensource.org/licenses/MIT">MIT licensed</a></li>
+		</ul>
+	</footer>
+
+	<script type="text/javascript" src="tagdog/js/tagdog.js"></script>
+	<script type="text/javascript">
+	(function() {
+		
+		/*
+		 *
+		 * FEATURE:
+		 * `options.replace` could also be a function!
+		 *
+		 * Implement toLower
+		 *
+		 * Check, whether the tag limit is actually enforced
+		 *
+		 *
+		 */
+		
+		var form = document.querySelector('.tagdog form'),
+				preview = document.querySelector('.preview'),
+				tags = tagdog('.tagdog-field', {
+					patterns: [{
+						regex: /^\s+|\s+$/g
+					}, {
+						regex: /[^a-zäöüß0-9-]+/gi
+					}]
+				});
+
+		function submitHandler(event) {
+			var html = [], key, tagString;
+
+			for(key in tags) {
+				tagString = tags[key].getTags(true);
+				
+				if(tagString) {
+					html.push('<h3>' + key + '</h3>');
+					html.push('<p>' + tagString.replace(/[,]/g, ', ') + '</p>');
+				}
+			};
+			
+			preview.innerHTML = html.join('\n');
+			event.preventDefault();
+		}
+		
+		form.addEventListener('submit', submitHandler, false);
+
+	}).call(this);
+	</script>
+
+</body>
+</html>

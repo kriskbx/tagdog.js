@@ -1,0 +1,39 @@
+{
+	"ecmaFeatures": {
+		"arrowFunctions": true,
+		"binaryLiterals": true,
+		"blockBindings", true,
+		"defaultParams", true,
+		"destructuring", true,
+		"forOf", true,
+		"generators", true,
+		"modules", true,
+		"objectLiteralComputedProperties", true,
+		"objectLiteralShorthandMethods", true,
+		"objectLiteralShorthandProperties", true,
+		"octalLiterals", true,
+		"regexUFlag", true,
+		"regexYFlag", true,
+		"restParams", true,
+		"spread", true,
+		"templateStrings", true,
+		"unicodeCodePointEscapes", true,
+		"jsx", true,
+		
+		"classes", false,
+		"objectLiteralDuplicateProperties", false,
+		"superInFunctions", false,
+		"globalReturn", false,
+		"experimentalObjectRestSpread", false
+	},
+	"rules": {
+		"semi": [2, "always"],
+		"strict": [2, "global"],
+		"camelcase": [2, {"properties": "always"}],
+		"no-extra-parens": 2
+	},
+	"env": {
+		"browser": true,
+		"node": true
+	}
+}

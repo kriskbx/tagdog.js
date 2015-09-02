@@ -1,0 +1,94 @@
+/* GENERAL RESET */
+html,
+body, section, nav, article, aside, hgroup, h1, h2, h3, h4, h5, h6, header, footer, address, main,
+p, hr, pre, blockquote, ol, ul, li, dl, dt, dd, figure, figcaption, div,
+a, em, strong, small, s, cite, q, dfn, abbr data, time, code, var, samp, kbd, sub, sup, i, b, u, mark, ruby, rt, rp, bdi, bdo, span, br, wbr,
+ins, del,
+img, iframe, embed, object, param, video, audio, source, track, canvas, map, area, svg, math,
+tabel, caption, colgroup, col, tbody, thead, tfoot, tr, td, th,
+form, fieldset, legend, label, input, button, select, datalist, optgroup, option, textarea, keygen, output, progress, meter,
+details, summary, menuitem, menu {
+	margin : 0;
+	padding : 0;
+	border: 0;
+	font-size : 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+address, audio, aside, audio, blockquote, canvas, dd, div, dl, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, noscript, ol, output, p, pre, section, table, tfoot, ul, video {
+	display : block;
+}
+
+b, big, i, small, tt, abbr, acronym, cite, code, dfn, em, kbd, strong, samp, var, a, bdo, br, img, map, object, q, span, sub, sup, button, input, label, select, textarea {
+	display : inline;
+}
+
+
+/* PREFERRED BASIC STYLES */
+
+body {
+	line-height: 1;
+	overflow-y : scroll;
+}
+
+body, textarea, input {
+	font-family: sans-serif;
+}
+
+ol, ul {
+	list-style: none;
+}
+
+blockquote, q {
+	quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: '';
+	content: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+img {
+	display : block;
+	width : 100%;
+	max-width : 100%;
+}
+
+a {
+	text-decoration : none;
+	color : #309AFF;
+}
+
+a:hover {
+	color : #50BAFF;
+}
+
+:focus {
+	outline: 0;
+}
+
+
+/* HELPER CLASSES */
+
+.clear {
+	zoom : 1;
+}
+
+.clear:before,
+.clear:after {
+    content: "\0020";
+    display: table;
+}
+
+.clear:after {
+    clear: both;
+}

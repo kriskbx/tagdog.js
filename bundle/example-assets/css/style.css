@@ -1,0 +1,164 @@
+body {
+	font-family : "Raleway", sans-serif;
+	background-color : #F8F8F8;
+	color : #555;
+	line-height : 1.5;
+}
+
+* {
+	box-sizing : border-box;
+}
+
+header,
+.main,
+footer {
+	position : relative;
+	width: 100%;
+	max-width : 64em;
+	margin : 0 auto;
+	padding : 2em;
+	overflow : hidden;
+	background-color : #FFF;
+	box-shadow : inset 0px 1px 0px #F0F0F0, 0px 1px 0px #F0F0F0;
+}
+
+header {
+	margin-top : 2em;
+}
+
+header p {
+	font-size : 1.125em;
+	line-height : 1.75;
+	font-weight : 300;
+	margin-bottom : 0.75em;
+}
+
+.main section {
+	float : left;
+	width : 45%;
+	margin : 1em 0 1em 10%;
+}
+
+.main section:nth-of-type(2n+1) {
+	clear : both;
+	margin-left : 0;
+}
+
+footer li {
+	font-size : 0.9375em;
+	line-height : 1.6;
+}
+
+h1 {
+	font-size : 2em;
+	font-weight : 300;
+	line-height : 2;
+	color : yellowgreen;
+}
+
+code {
+	font-family : monospace;
+	background-color : #E8E8E8;
+	display : inline-block;
+	vertical-align : middle;
+	line-height : 1.75em;
+	padding : 0 0.5em;
+	border-radius : 2px;
+	text-shadow : 1px 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+h3 {
+	text-transform : uppercase;
+	color :	rgba(154, 205, 50, 1);
+	line-height : 2;
+}
+
+form > div {
+	margin-bottom : 1.5em;
+}
+
+.button {
+	display : inline-block;
+	border : none;
+	background-color : rgba(154, 205, 50, 0.9);
+	text-shadow : 1px 1px 1px rgba(0, 0, 0, 0.1);
+	box-shadow : inset -1px -1px 0px rgba(0, 0, 0, 0.05);
+	color : #FFF;
+	border-radius : 2px;
+	padding : 0.5em 1em;
+	cursor : pointer;
+}
+
+.button:hover {
+	background-color : rgba(154, 205, 50, 1);
+}
+
+.preview ul + h3 {
+	margin-top : 1.5em;
+}
+
+.preview ul {
+	overflow : hidden;
+}
+
+.horizontal-list li {
+	display : inline;
+}
+
+.horizontal-list li:after {
+	content : "\0020\2022";
+	display : inline;
+}
+
+.horizontal-list li:nth-last-child(1):after {
+	display : none;
+}
+
+
+/* 
+ * Additional Tagdog styles.
+ **/
+
+input[type="text"] {
+	width : 100%;
+	max-width : 30em;
+  background-color : transparent;
+  border : none;
+  height : 3em;
+ 	padding : 0.5em 0.5em;
+	line-height : 2;
+  box-shadow : inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+  background-color : #F8F8F8;
+  color : #727272;
+  font-weight : 300;
+	border-radius : 2px;
+}
+
+label {
+	font-weight : 800;
+}
+
+.tagdog-field {
+  width : 30em;
+  max-width : 100%;
+}
+
+
+/*
+ * Media Queries
+ **/
+
+@media all and (max-width : 48em) {
+	header,
+	.main,
+	footer {
+		padding : 1.5em 1em;
+	}
+
+	.main section:nth-of-type(1n) {
+		width : auto;
+		clear : none;
+		float : none;
+		margin : 1em auto;
+	}
+}
