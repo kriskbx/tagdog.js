@@ -7,9 +7,9 @@
 
 	<title>tagdog.js Demo</title>
 
-	<link rel="stylesheet" type="text/css" media="screen" href="example-assets/css/reset.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="assets/css/reset.css">
 	<link rel="stylesheet" type="text/css" media="screen" href="tagdog/css/tagdog.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="example-assets/css/style.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css">
 	<link rel="stylesheet" type="text/css" media="screen" href="https://fonts.googleapis.com/css?family=Raleway:300,400,800">
 
 </head>
@@ -56,16 +56,12 @@
 	(function() {
 		
 		/*
-		 *
-		 * FEATURE:
-		 * `options.replace` could also be a function!
-		 *
-		 * Implement toLower
-		 *
-		 * Check, whether the tag limit is actually enforced
-		 *
-		 *
-		 */
+		 TODOS:
+		 - `options.replace` could also be a function for more effective replacement of unwanted characters.
+		 - Implement `options.toLower`, so that tag names are converted to lower case
+		 - Implement a tag limit
+		 - Implement a tag length limit
+		*/
 		
 		var form = document.querySelector('.tagdog form'),
 				preview = document.querySelector('.preview'),

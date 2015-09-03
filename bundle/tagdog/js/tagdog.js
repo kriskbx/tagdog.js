@@ -152,7 +152,7 @@
 				regex: /^\s+|\s+$/g
 			}, {
 				// Replace everything that does not match this pattern with the empty String.
-				regex: /[^a-z0-9-]+/gi
+				regex: /[^a-z0-9 -]+/gi
 			}],
 			tooltipTitle: "Click to delete"
 		}, options);
