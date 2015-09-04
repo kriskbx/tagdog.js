@@ -54,22 +54,21 @@
 	<script type="text/javascript" src="tagdog/js/tagdog.js"></script>
 	<script type="text/javascript">
 	(function() {
-		
-		/*
-		 TODOS:
-		 - `options.replace` could also be a function for more effective replacement of unwanted characters.
-		 - Implement `options.toLower`, so that tag names are converted to lower case
-		 - Implement a tag limit
-		 - Implement a tag length limit
-		*/
-		
+
 		var form = document.querySelector('.tagdog form'),
 				preview = document.querySelector('.preview'),
-				tags = tagdog('.tagdog-field');
-
+				tags = tagdog('.tagdog-field', {
+					patterns: [{
+						regex: /^\s+|\s+$/g
+					},{
+						regex: /(^[^a-z0-9äöüß -]+)$/gi
+					}]
+				});
+		
+		form.addEventListener('submit', submitHandler, false);
+		
 		function submitHandler(event) {
 			var html = [], key, tagString;
-
 			for(key in tags) {
 				tagString = tags[key].getTags(true);
 				
@@ -78,12 +77,9 @@
 					html.push('<p>' + tagString.replace(/[,]/g, ', ') + '</p>');
 				}
 			};
-			
 			preview.innerHTML = html.join('\n');
 			event.preventDefault();
 		}
-		
-		form.addEventListener('submit', submitHandler, false);
 
 	}).call(this);
 	</script>

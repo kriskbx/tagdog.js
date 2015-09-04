@@ -156,6 +156,8 @@
 			}],
 			tooltipTitle: "Click to delete"
 		}, options);
+		
+		console.log(options);
 
 		this.patterns = options.patterns;
 		this.tooltipTitle = options.tooltipTitle;
@@ -235,8 +237,8 @@
 
 	// Cleans tag names of unwanted characters.
 	Tagdog.prototype.cleanTagName = function cleanTagName(tagName) {
-		return this.patterns.reduce(function(tagName, pattern) {
-			return tagName.replace(pattern.regex, pattern.replace || "");
+		return this.patterns.reduce(function replacer(tagName, pattern) {
+			return tagName.replace(pattern.regex, pattern.replace || '');
 		}, tagName);
 	};
 
