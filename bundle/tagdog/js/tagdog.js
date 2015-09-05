@@ -1,5 +1,6 @@
 (function() {
-	"use strict";
+	
+	'use strict';
 
 	/*
 	 * Private variables.
@@ -99,7 +100,7 @@
 		if(keyCode === 'enter' || keyCode === ',') {
 			event.preventDefault();
 
-			tag = this.cleanTagName(this.originalInput.value);
+			tag = this.cleanTagName(this.ensureMaxLength(this.originalInput.value));
 
 			if(tag.length <= 0) return false;
 
@@ -108,8 +109,8 @@
 			}
 		}
 
-		if(keyCode === 'backspace' && hiddenValue.length > 0 ) {
-			if( this.originalInput.value.length > 0) return false;
+		if(keyCode === 'backspace' && hiddenValue.length > 0) {
+			if(this.originalInput.value.length > 0) return false;
 			tags = qsa('.tagdog-tag', this.tagContainer);
 			this.removeTag(tags[tags.length - 1]);
 		}
@@ -152,7 +153,9 @@
 				// Replace everything that does not match this pattern with the empty String.
 				regex: /[^a-z0-9 -]+/gi
 			}],
-			tooltipTitle: "Click to delete"
+			tooltipTitle: "Click to delete",
+			maxLength: 255,
+			maxTags: 12
 		}, options);
 
 		// Assign the Tagdog element and add the actual tagdog CSS class, if not already defined.
@@ -199,10 +202,11 @@
 	// Updates Tagdog instances in case there are predefined tags.
 	var updateInstance = function updateInstance() {
 		var dummy = this.originalInput,
-				dummyValue = (dummy.getAttribute('value') || "").split(',');
+				dummyValues = (dummy.getAttribute('value') || "").split(',');
 
-		dummyValue.forEach(function addTags(tag) {
-			this.addTag(tag);
+		dummyValues.forEach(function addTags(tagName) {
+			tagName = this.ensureMaxLength(tagName);
+			this.addTag(tagName);
 		}, this);
 
 		// We don't need the name attribute.
@@ -230,56 +234,60 @@
 
 	// Cleans tag names of unwanted characters.
 	Tagdog.prototype.cleanTagName = function cleanTagName(tagName) {
+		
+		tagName = this.ensureMaxLength(tagName);
+		
 		return this.options.patterns.reduce(function replacer(tagName, pattern) {
 			return tagName.replace(pattern.regex, pattern.replace || '');
 		}, tagName);
 	};
 
 
-	// Checks whether a tag already exists.
-	Tagdog.prototype.hasTag = function hasTag(tag) {
-		var tagName = isHTMLElement(tag) ? tag.textContent : tag;
-		return arrayContains(this.currentTags, tagName);
-	};
-
-
 	// Creates and returns new tag element.
-	Tagdog.prototype.createTag = function createTag(tagName, unsafe) {
-		var title = unsafe ? tagName : this.cleanTagName(tagName),
-				tagNode = document.createElement('span');
+	Tagdog.prototype.createTagElement = function createTagElement(tagName, unsafe) {
+		var tagElement;
+				
+		if(this.hasTag(tagName)) return null;
+		
+		tagElement = document.createElement('span');
+		tagElement.textContent = unsafe ? tagName : this.cleanTagName(tagName);
+		tagElement.setAttribute('aria-hidden', true);
+		tagElement.setAttribute('role', 'button');
+		tagElement.setAttribute('data-title', this.options.tooltipTitle);
+		tagElement.className = "tagdog-tag";
 
-		tagNode.textContent = title;
-		tagNode.setAttribute('aria-hidden', true);
-		tagNode.setAttribute('role', 'button');
-		tagNode.setAttribute('data-title', this.options.tooltipTitle);
-		tagNode.className = "tagdog-tag";
-
-		return tagNode;
+		return tagElement;
 	};
 
 
 	// Adds a new tag element to the current Tagdog instance.
-	Tagdog.prototype.insertTagElement = function insertTagElement(tag, duplicates) {
-		if(!duplicates && this.hasTag(tag.textContent)) return null;
+	Tagdog.prototype.insertTagElement = function insertTagElement(tagElement, duplicates) {
+		if(!duplicates && this.hasTag(tagElement.textContent)) return null;
+		if(this.isMaxTags()) return null;
 
-		tag.classList.add('tagdog-tag');
+		tagElement.classList.add('tagdog-tag');
 
-		this.currentTags.push(tag.textContent);
-		this.tagContainer.appendChild(tag);
+		this.currentTags.push(tagElement.textContent);
+		this.tagContainer.appendChild(tagElement);
 		this.hiddenInput.value = this.currentTags.join(',');
 		this.originalInput.value = '';
 
-		return tag;
+		return tagElement;
 	};
 
 
 	// Adds a new tag to the current Tagdog instance.
-	Tagdog.prototype.addTag = function addTag(tagName) {
-		if(!isString(tagName) || !tagName.trim() || this.hasTag(tagName)) {
-			return null;
-		}
+	Tagdog.prototype.addTag = function addTag(tag) {
+		var tagElement = isHTMLElement(tag) ? tag : this.createTagElement(tag);
+		return this.insertTagElement(tagElement);
+	};
+	
 
-		return this.insertTagElement(this.createTag(tagName));
+	// Checks whether a tag already exists.
+	Tagdog.prototype.hasTag = function hasTag(tag) {
+		var tagName = isHTMLElement(tag) ? tag.textContent : tag;
+		tagName = this.ensureMaxLength(tagName);
+		return arrayContains(this.currentTags, tagName);
 	};
 
 
@@ -335,11 +343,24 @@
 	};
 
 
+	// Returns `true`, if the maxTags limit is reached, `false` otherwise.
+	Tagdog.prototype.isMaxTags = function isMaxTags() {
+		return this.getTags().length >= this.options.maxTags;
+	};
+
+
 	// Converts a value to a String first and then to lower case, so we can
 	// simply convert the whole currentTags Array to a lower case String.
 	Tagdog.prototype.toLower = function toLower(value) {
 		if(!isString(value) && !isArray(value)) return '';
 		return String(value).toLowerCase();
+	};
+
+
+	// Makes sure a tagName is no longer than options.maxLength
+	Tagdog.prototype.ensureMaxLength = function ensureMaxLength(tagName) {
+		var maxLength = this.options.maxLength;
+		return tagName >= maxLength ? tagName : tagName.substring(0, maxLength);
 	};
 
 	// Checks, whether the provided value is an HTMLElement.
@@ -348,8 +369,15 @@
 
 	// Checks, whether the provided value is a NodeList.
 	Tagdog.prototype.isNodeList = isNodeList;
+	
+
+	// Alias of Tagdog#createTagElement. Already deprecated, will be removed in later versions.
+	Tagdog.prototype.createTag = Tagdog.prototype.createTagElement;
 
 
+	/*
+	 * With this function the Tagdog constructor is extensible.
+	 **/
 	var extendTagdog = function extendTagdog(protoProps, staticProps) {
 		var Extended = function Extended(field, options) {
 			if( !(this instanceof Extended) ) {

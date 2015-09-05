@@ -90,6 +90,12 @@ The above means that leading and trailing white-space as well as everything that
 #### `options.tooltipTitle`
 The title for the tooltip (shown only on devices with a max resolution of 96dpi). The default text is *Click to delete*.
 
+#### `options.maxTags`
+Sets the maximum number of tags.
+
+#### `options.maxLength`
+Sets the maximium character count of tag names.
+
 ### c) `protoProps`
 If provided as the third argument to `tagdog()` to  every property of this `protoProps` will be copied over to the `Tagdog.prototype`.
 
