@@ -11,8 +11,6 @@ var autoprefixer = require('gulp-autoprefixer');
 var sourcemaps = require("gulp-sourcemaps");
 var uglify = require("gulp-uglify");
 
-var path = require('path');
-
 
 gulp.task('default', ['serve']);
 

@@ -14,22 +14,22 @@
 
 </head>
 <body>
-	
+
 	<header role="banner">
 		<h1>tagdog.js</h1>
 		<p>A simple, UI-enhancing and mobile-optimized JavaScript plugin that turns text input fields into tag fields.</p>
 		<p>Write a tag into an input field, then press the <code>,</code> or <code>enter</code> key. Tagdog will create a tag for you. Delete tags by clicking on them or by pressing <code>backspace</code> when the input field is empty.</p>
 	</header>
-	
+
 	<div class="main" role="main">
 		<section class="tagdog">
 			<form action="" method="POST">
-				<div class="tagdog-field">
+				<div class="tagdog-field interests">
 					<label for="interests">Interests</label>
 					<input type="text" id="interests" name="interests" value="code,coffee,music" placeholder="Divide tags by comma" />
 				</div>
 
-				<div class="tagdog-field">
+				<div class="tagdog-field technologies">
 					<label for="technologies">Technologies</label>
 					<input type="text" id="technologies" name="technologies" value="Node,JavaScript,CSS,HTML" placeholder="Divide tags by comma" />
 				</div>
@@ -42,7 +42,7 @@
 
 		<section class="preview"></section>
 	</div>
-	
+
 	<footer>
 		<ul class="horizontal-list">
 			<li>Created by <a title="Visit me and hire me" href="https://letmeco.de">Letmecode</a></li>
@@ -57,29 +57,39 @@
 
 		var form = document.querySelector('.tagdog form'),
 				preview = document.querySelector('.preview'),
-				tags = tagdog('.tagdog-field', {
+				fields = tagdog('.tagdog-field', {
 					patterns: [{
 						regex: /^\s+|\s+$/g
 					},{
 						regex: /(^[^a-z0-9äöüß -]+)$/gi
 					}]
+				}, {
+					count: function count() {
+						var name = this.name,
+								number = this.getTags().length;
+
+						return this.message.replace(/({name})/g, name).replace(/({number})/g, number);
+					}
+				}, {
+					message: 'The field {name} has {number} tags'
 				});
-		
-		form.addEventListener('submit', submitHandler, false);
-		
-		function submitHandler(event) {
+
+
+		form.addEventListener('submit', function submitHandler(event) {
 			var html = [], key, tagString;
-			for(key in tags) {
-				tagString = tags[key].getTags(true);
-				
+
+			for(key in fields) {
+				tagString = fields[key].getTags(true);
+
 				if(tagString) {
-					html.push('<h3>' + key + '</h3>');
+					html.push('<h3>' + fields[key].count() + '</h3>');
 					html.push('<p>' + tagString.replace(/[,]/g, ', ') + '</p>');
 				}
 			};
+
 			preview.innerHTML = html.join('\n');
 			event.preventDefault();
-		}
+		}, false);
 
 	}).call(this);
 	</script>

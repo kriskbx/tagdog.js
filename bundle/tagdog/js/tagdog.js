@@ -20,16 +20,16 @@
 	 * Mostly private shortcuts and helper functions.
 	 **/
 
-	var arraySlice = Array.prototype.slice;
-	
-	var objectToString = Object.prototype.toString;
-	
+	var slice = Array.prototype.slice;
+
+	var toString = Object.prototype.toString;
+
 	var typeError = function error(message) {
 		throw new TypeError(message);
 	};
 
 	var getType = function getType(obj) {
-		return objectToString.call(obj).slice(8, -1);
+		return toString.call(obj).slice(8, -1);
 	};
 
 	var isString = function isString(obj) {
@@ -53,7 +53,7 @@
 	};
 
 	var toArray = function toArray(obj) {
-		return arraySlice.call(obj);
+		return slice.call(obj);
 	};
 
 	var arrayContains = function arrayContains(array, value) {
@@ -67,22 +67,22 @@
 	var qsa = function qsa(selector, element) {
 		return (element || document).querySelectorAll(selector);
 	};
-	
+
 	// A basic extend function always helps making things easier.
 	var extend = function extend(receiver /*, emitters */) {
-		var emitters = arraySlice.call(arguments, 1),
+		var emitters = slice.call(arguments, 1),
 				n = emitters.length,
 				i, key, emitter;
-		
+
 		if(!n) return receiver;
-		
+
 		for(i = 0; i < n; i++) {
 			emitter = emitters[i];
 			for(key in emitter) {
 				receiver[key] = emitter[key];
 			}
 		}
-		
+
 		return receiver;
 	};
 
@@ -128,7 +128,7 @@
 		}
 
 		this.removeTag(target);
-		
+
 		// Refocussing makes for a nicer mobile experience.
 		this.originalInput.focus();
 	};
@@ -141,11 +141,9 @@
 	 */
 
 	// Creates all the needed elements for each instance
-	var createElements = function createElements(element, options) {
-		
-		this.extend = extend;
-		
-		options = this.extend({
+	var createElements = function createElements(field, options) {
+
+		this.options = extend({
 			// Default replacement patterns
 			patterns: [{
 				// Replace all leading and trailing white-space with the empty String.
@@ -156,21 +154,16 @@
 			}],
 			tooltipTitle: "Click to delete"
 		}, options);
-		
-		console.log(options);
-
-		this.patterns = options.patterns;
-		this.tooltipTitle = options.tooltipTitle;
 
 		// Assign the Tagdog element and add the actual tagdog CSS class, if not already defined.
-		this.element = element || qs('.tagdog-field');
-		this.element.classList.add('tagdog-field');
+		this.field = isHTMLElement(field) ? field : qs(field);
+		this.field.classList.add('tagdog-field');
 
 		// This is where the tags are saved.
 		this.currentTags = [];
 
 		// originalInput is the provided input field used to enter the tags.
-		this.originalInput = qs('input', this.element);
+		this.originalInput = qs('input', this.field);
 		this.name = this.originalInput.getAttribute('name') || 'tagdog_' + (++counter);
 
 		// The hidden input field is the actual input field. It receives the name attribute of the dummy input field.
@@ -185,15 +178,15 @@
 		this.tagContainer.className = 'tagdog-container';
 
 		// Append the new elements.
-		this.element.appendChild(this.hiddenInput);
-		this.element.insertBefore(this.tagContainer, this.originalInput);
+		this.field.appendChild(this.hiddenInput);
+		this.field.insertBefore(this.tagContainer, this.originalInput);
 	};
 
 
 	// Attach all the needed event listeners.
 	var addListeners = function addListeners() {
 		// TODO: Implement proper plain text pasting.
-		this.element.addEventListener('paste', preventDefault, false);
+		this.field.addEventListener('paste', preventDefault, false);
 
 		// Make the dummy input field listen for keystrokes.
 		this.originalInput.addEventListener('keydown', keydownHandler.bind(this), false);
@@ -220,12 +213,12 @@
 	/**
 	 * Tagdog constructor.
 	 */
-	var Tagdog = function Tagdog(element, options) {
+	var Tagdog = function Tagdog(field, options) {
 		if( !(this instanceof Tagdog) ) {
-			return new Tagdog(element, options);
+			return new Tagdog(field, options);
 		}
 
-		createElements.call(this, element, options);
+		createElements.call(this, field, options);
 		addListeners.call(this);
 		updateInstance.call(this);
 	};
@@ -237,7 +230,7 @@
 
 	// Cleans tag names of unwanted characters.
 	Tagdog.prototype.cleanTagName = function cleanTagName(tagName) {
-		return this.patterns.reduce(function replacer(tagName, pattern) {
+		return this.options.patterns.reduce(function replacer(tagName, pattern) {
 			return tagName.replace(pattern.regex, pattern.replace || '');
 		}, tagName);
 	};
@@ -245,7 +238,7 @@
 
 	// Checks whether a tag already exists.
 	Tagdog.prototype.hasTag = function hasTag(tag) {
-		var tagName = typeof tag === 'object' ? tag.textContent : tag;
+		var tagName = isHTMLElement(tag) ? tag.textContent : tag;
 		return arrayContains(this.currentTags, tagName);
 	};
 
@@ -258,7 +251,7 @@
 		tagNode.textContent = title;
 		tagNode.setAttribute('aria-hidden', true);
 		tagNode.setAttribute('role', 'button');
-		tagNode.setAttribute('data-title', this.tooltipTitle);
+		tagNode.setAttribute('data-title', this.options.tooltipTitle);
 		tagNode.className = "tagdog-tag";
 
 		return tagNode;
@@ -306,7 +299,7 @@
 				return removed;
 			}
 		}
-		
+
 		return null;
 	};
 
@@ -357,6 +350,23 @@
 	Tagdog.prototype.isNodeList = isNodeList;
 
 
+	var extendTagdog = function extendTagdog(protoProps, staticProps) {
+		var Extended = function Extended(field, options) {
+			if( !(this instanceof Extended) ) {
+				return new Extended(field, options);
+			}
+
+			Tagdog.apply(this, arguments);
+
+			if(staticProps) extend(this, staticProps);
+		};
+
+		Extended.prototype = extend(Tagdog.prototype, protoProps);
+		Extended.prototype.constructor = Tagdog.prototype.constructor;
+
+		return Extended;
+	};
+
 
 	/*
 	 * The namespace is a decorator function. You can provide either a
@@ -368,16 +378,19 @@
 	 * match the selector `.tagdog-field`. No matches will result in a
 	 * return value of `null`.
 	 **/
-	this.tagdog = function tagdog(field, options) {
+	this.tagdog = function tagdog(field, options, protoProps, staticProps) {
+
 		// If `field` is falsy, simply call tagdog again
 		// recursively and pass the default Tagdog selector.
 		if(!field) {
-			return tagdog('.tagdog-field', options);
+			return tagdog('.tagdog-field', options, protoProps, staticProps);
 		}
 
 		// If `field` is an HTMLElelent, return a single instance.
 		if(isHTMLElement(field)) {
-			return new Tagdog(field, options);
+			return (protoProps || staticProps) ?
+				extendTagdog(protoProps, staticProps)(field, options) :
+				new Tagdog(field, options);
 		}
 
 		// If `field` is a String, it's assumed it's a CSS selector.
@@ -385,21 +398,23 @@
 		// match, return `null`. If there is one match call tagdog
 		// recursively and pass the HTMLElement so that tagdog can
 		// return a single instance. If there are two or more matches
-		// do the same, but provide the whole NodeList.
+		// do the same, but instead provide the whole NodeList.
 		if(isString(field)) {
 			var elements = qsa(field),
 					n = elements.length;
 
 			if(!n) return null;
 
-			return n > 1 ? tagdog(elements, options) : tagdog(elements[0], options);
+			field = n > 1 ? elements : elements[0];
+
+			return tagdog(field, options, protoProps, staticProps);
 		}
 
 		// If `field` is a NodeList return an Object of Tagdog instances.
 		if(isNodeList(field)) {
 			field = toArray(field);
 			return field.reduce(function(obj, element) {
-				var inst = tagdog(element, options);
+				var inst = tagdog(element, options, protoProps, staticProps);
 				obj[inst.name] = inst;
 				return obj;
 			}, {});
