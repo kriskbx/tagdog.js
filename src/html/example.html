@@ -69,8 +69,10 @@
 					count: function count() {
 						var name = this.name,
 								number = this.getTags().length;
-
 						return this.message.replace(/({name})/g, name).replace(/({number})/g, number);
+					},
+					getOptions: function getOptions() {
+						return this.options;
 					}
 				}, {
 					message: 'The field {name} has {number} tags'
@@ -78,13 +80,16 @@
 
 
 		form.addEventListener('submit', function submitHandler(event) {
-			var html = [], key, tagString;
+			var html = [], key, inst, tagString;
 
 			for(key in fields) {
-				tagString = fields[key].getTags(true);
+				inst = fields[key],
+				options = inst.getOptions(),
+				tagString = inst.getTags(true);
 
 				if(tagString) {
-					html.push('<h3>' + fields[key].count() + '</h3>');
+					html.push('<h3>' + inst.count() + '</h3>');
+					html.push('<p><span>maxTags</span>: ' + options.maxTags + '; <span>maxLength</span>: ' + options.maxLength + '</p>');
 					html.push('<p>' + tagString.replace(/[,]/g, ', ') + '</p>');
 				}
 			};

@@ -56,6 +56,16 @@ h1 {
 	color : yellowgreen;
 }
 
+h3 {
+	text-transform : uppercase;
+	color : rgba(154, 205, 50, 1);
+	line-height : 2;
+}
+
+form > div {
+	margin-bottom : 1.5em;
+}
+
 code {
 	font-family : monospace;
 	background-color : #E8E8E8;
@@ -65,16 +75,6 @@ code {
 	padding : 0 0.5em;
 	border-radius : 2px;
 	text-shadow : 1px 1px 1px rgba(255, 255, 255, 0.5);
-}
-
-h3 {
-	text-transform : uppercase;
-	color :	rgba(154, 205, 50, 1);
-	line-height : 2;
-}
-
-form > div {
-	margin-bottom : 1.5em;
 }
 
 .button {
@@ -93,12 +93,12 @@ form > div {
 	background-color : rgba(154, 205, 50, 1);
 }
 
-.preview ul + h3 {
+.preview p + h3 {
 	margin-top : 1.5em;
 }
 
-.preview ul {
-	overflow : hidden;
+.preview h3 + p + p {
+	font-weight : 800;
 }
 
 .horizontal-list li {
