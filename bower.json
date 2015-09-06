@@ -27,6 +27,11 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "src",
+    ".eslintrc",
+    ".gitignore",
+    "package.json",
+    "gulpfile.js"
   ]
 }
