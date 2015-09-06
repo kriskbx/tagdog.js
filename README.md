@@ -3,10 +3,11 @@
 ## Table of contents
 1. [What is Tagdog?](#user-content-1-what-is-tagdog)
 2. [How does Tagdog work?](#user-content-2-how-does-tagdog-work)
-3. [Implementation and instantiation](#user-content-3-implementation-and-instantiation)
-4. [Selectors and options](#user-content-4-selectors-and-options)
-5. [The Tagdog API](#user-content-5-the-tagdog-api)
-6. [Styling](#user-content-6-styling)
+3. [Install Tagdog](#user-content-3-install-tagdog)
+4. [Implementation and instantiation](#user-content-4-implementation-and-instantiation)
+5. [Selectors and options](#user-content-5-selectors-and-options)
+6. [The Tagdog API](#user-content-6-the-tagdog-api)
+7. [Styling](#user-content-7-styling)
 
 ---
 
@@ -33,7 +34,12 @@ You can write your tags into the original input field, then press the `Enter` or
 Here's a live example of [Tagdog in action](https://showcase.letmeco.de/tagdog/).
 
 
-## 3. Implementation and instantiation
+## 3. Install Tagdog
+In order to install Tagdog, `bower install tagdog` or the the good old `git clone git@github.com:odiumediae/tagdog.js.git`will work nicely.
+
+
+
+## 4. Implementation and instantiation
 To create one or more instances of Tagdog you just need to import the Tagdog JavaScript into your HTML. You should put it as close as possible before any scripts or modules that make use of Tagdog, and the closing `body` tag, like this:
 
 ```javascript
@@ -58,7 +64,7 @@ When called (with or without arguments) it returns one or more Tagdog instances,
 Tagdog can be configured by providing multiple options, and its prototype as well as its static properties can easily be extended or overloaded by providing the `protoProps` and/or `staticProps` (see below).
 
 
-## 4. Selectors and options
+## 5. Selectors and options
 
 ### a) `selector` (optional)
 - a falsy value, like `null`, in which case Tagdog will search for elements with the default CSS class of `.tagdog-field`
@@ -103,7 +109,7 @@ If provided as the third argument to `tagdog()` to  every property of this `prot
 All Tagdog instances produced with `staticProps` as the fourth parameter to the instantiator function `tagdog()` will have `staticProps`'s properties copied over as static properties.  
 
 
-## 5. The Tagdog API
+## 6. The Tagdog API
 There is a variety of methods you can use to manipulate Tagdog instances to build new things with Tagdog.
 
 #### `addTag(tagName) -> {HTMLElement}`
@@ -146,7 +152,7 @@ Checks, whether the provided value is an HTMLElement.
 Checks, whether the provided value is a NodeList.
 
 
-## 6. Styling
+## 7. Styling
 
 There is a basic stylesheet called `tagdog.css` and of course a minified version called `tagdog.min.css` with accompanying source-maps that come with with Tagdog. Import it as you would any other stylesheet and overrride the styles you don't like of simply restyle Tagdog yourself, if you're so inclined. Styling should be very intuitive. All Tagdog CSS classes are prefixed with `tagdog-` to make styling less error prone. The actual CSS classes and element types are:
 
