@@ -14,7 +14,8 @@
     "tagging",
     "forms",
     "fields",
-    "components"
+    "components",
+    "plugin"
   ],
   "author": "Letmecode <odiumediae@gmail.com>",
   "license": "MIT",

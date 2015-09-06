@@ -7,8 +7,8 @@
   ],
   "description": "A simple, UI-enhancing and mobile-optimized JavaScript plugin that turns text input fields into tag fields.",
   "main": [
-    "./src/js/tagdog.js",
-    "./src/css/tagdog.css"
+    "bundle/tagdog/js/tagdog.js",
+    "bundle/tagdog/css/tagdog.css"
   ],
   "moduleType": [
     "globals"
