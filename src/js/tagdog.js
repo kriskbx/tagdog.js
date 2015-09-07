@@ -100,9 +100,9 @@
 		if(keyCode === 'enter' || keyCode === ',') {
 			event.preventDefault();
 
-			tag = this.ensureMaxLength(this.originalInput.value);
-
 			if(tag.length <= 0) return false;
+
+			tag = this.ensureMaxLength(this.originalInput.value);
 
 			if(!arrayContains(this.currentTags, tag)) {
 				this.addTag(tag);
