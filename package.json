@@ -1,6 +1,6 @@
 {
   "name": "tagdog.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A JavaScript plugin for tag input fields.",
   "main": "./example/index.html",
   "directories": {
