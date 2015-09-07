@@ -35,8 +35,7 @@ Here's a live example of [Tagdog in action](https://showcase.letmeco.de/tagdog/)
 
 
 ## 3. Install Tagdog
-In order to install Tagdog, `bower install tagdog` or the the good old `git clone git@github.com:odiumediae/tagdog.js.git`will work nicely.
-
+In order to install Tagdog, ~~`bower install tagdog` or the~~ the good old `git clone git@github.com:odiumediae/tagdog.js.git`will work nicely. I unregistered the Bower package, because I had problems with the versioning/tagging and was too lazy (and annoyed by Bower) to deal with the problem without developing a nervous eye-twitch. Drop me a line, if you really *have* to have the Bower way.
 
 
 ## 4. Implementation and instantiation
