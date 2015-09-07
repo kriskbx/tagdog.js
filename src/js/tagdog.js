@@ -100,7 +100,7 @@
 		if(keyCode === 'enter' || keyCode === ',') {
 			event.preventDefault();
 
-			tag = this.cleanTagName(this.ensureMaxLength(this.originalInput.value));
+			tag = this.ensureMaxLength(this.originalInput.value);
 
 			if(tag.length <= 0) return false;
 
