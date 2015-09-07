@@ -202,11 +202,11 @@
 	// Updates Tagdog instances in case there are predefined tags.
 	var updateInstance = function updateInstance() {
 		var dummy = this.originalInput,
-				dummyValues = (dummy.getAttribute('value') || "").split(',');
+				dummyValues = dummy.getAttribute('value');
 				
-		if(!dummyValues.length) return;
+		if(!dummyValues) return;
 
-		dummyValues.forEach(function addTags(tagName) {
+		dummyValues.split(',').forEach(function addTags(tagName) {
 			tagName = this.ensureMaxLength(tagName);
 			this.addTag(tagName);
 		}, this);
