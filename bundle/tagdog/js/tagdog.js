@@ -203,6 +203,8 @@
 	var updateInstance = function updateInstance() {
 		var dummy = this.originalInput,
 				dummyValues = (dummy.getAttribute('value') || "").split(',');
+				
+		if(!dummyValues.length) return;
 
 		dummyValues.forEach(function addTags(tagName) {
 			tagName = this.ensureMaxLength(tagName);
