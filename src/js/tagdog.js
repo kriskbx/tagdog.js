@@ -73,11 +73,12 @@
 	var extend = function extend(receiver /*, emitters */) {
 		var emitters = slice.call(arguments, 1),
 				n = emitters.length,
-				i, key, emitter;
+				i = 0,
+				key, emitter;
 
 		if(!n) return receiver;
 
-		for(i = 0; i < n; i++) {
+		for( ; i < n; i++ ) {
 			emitter = emitters[i];
 			for(key in emitter) {
 				receiver[key] = emitter[key];
