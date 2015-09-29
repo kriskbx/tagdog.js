@@ -100,9 +100,9 @@
 		if(keyCode === 'enter' || keyCode === ',') {
 			event.preventDefault();
 
-			if(tag.length <= 0) return false;
-
 			tag = this.ensureMaxLength(this.originalInput.value);
+
+			if(tag.length <= 0) return false;
 
 			if(!arrayContains(this.currentTags, tag)) {
 				this.addTag(tag);
@@ -134,6 +134,15 @@
 		this.originalInput.focus();
 	};
 
+	var triggerNativeEvent = function triggerNativeEvent(element, name) {
+		if (document.createEvent) {
+			var event = document.createEvent('HTMLEvents');
+			event.initEvent(name, true, false);
+			element.dispatchEvent(event);
+		} else {
+			element.fireEvent(name);
+		}
+	};
 
 	/**
 	 * Private setup functions. Avoid polluting the instance API with
@@ -274,6 +283,8 @@
 		this.hiddenInput.value = this.currentTags.join(',');
 		this.originalInput.value = '';
 
+		triggerNativeEvent(this.field, 'change');
+
 		return tagElement;
 	};
 
@@ -306,6 +317,9 @@
 			tagElem = tags[--n];
 			if(tagElem.textContent === tag) {
 				tag = this.tagContainer.removeChild(tagElem);
+
+				triggerNativeEvent(this.field, 'change');
+
 				return removed;
 			}
 		}
@@ -319,6 +333,8 @@
 		this.currentTags.splice(this.currentTags.indexOf(tagElement.textContent), 1);
 		this.hiddenInput.value = this.currentTags.join(",");
 		var tag = this.tagContainer.removeChild(tagElement);
+
+		triggerNativeEvent(this.field, 'change');
 
 		return tag;
 	};
@@ -342,6 +358,8 @@
 		this.hiddenInput.setAttribute('value', '');
 		this.tagContainer.innerHTML = "";
 		this.currentTags.splice(0, this.currentTags.length);
+
+		triggerNativeEvent(this.field, 'change');
 	};
 
 
