@@ -8,6 +8,7 @@
 5. [Selectors and options](#user-content-5-selectors-and-options)
 6. [The Tagdog API](#user-content-6-the-tagdog-api)
 7. [Styling](#user-content-7-styling)
+8. [Tagdog Implementations](#user-content-7-tagdog-implementations)
 
 ---
 
@@ -163,6 +164,12 @@ Applied to a paragraph element that holds the visual tags elements. Tagdog doesn
 
 #### `.tagdog-tag`
 The visual tags pushed in to the tag container are simple span elements with a CSS class of `.tagdog-tag`, to keep everything simple and semantic.
+
+## Tagdog Implementations
+
+Wanna use Tagdog with a framework? [Here's](https://github.com/kriskbx/vue-tagdog) directive for [Vue.js](https://github.com/yyx990803/vue) by [kriskbx](https://github.com/kriskbx)
+
+Please drop me a line, if you've build a directive or implementation for other frameworks and libraries, like React, Angular, etc. I'll gladly feature them prominently, here. Also, please do tell me about any implementation problems with Tagdog itself, in case you encounter any.
 
 
 ---
