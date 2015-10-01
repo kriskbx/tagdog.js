@@ -36,6 +36,7 @@
 
 				<div>
 					<button class="button">Submit</button>
+					<input type="reset" class="button reset" value="Reset" />
 				</div>
 			</form>
 		</section>
@@ -56,7 +57,10 @@
 	(function() {
 
 		var form = document.querySelector('.tagdog form'),
+				reset = form.querySelector('.reset'),
 				preview = document.querySelector('.preview'),
+				clickOrTap = window.ontouchend ? 'touchend' : 'click',
+				events = ['taginserted', 'tagremoved', 'fieldreset'],
 				fields = tagdog('.tagdog-field', {
 					patterns: [{
 						regex: /^\s+|\s+$/g
@@ -76,29 +80,53 @@
 					}
 				}, {
 					message: 'The field {name} has {number} tags'
-				});
-
-
-		var interests = fields.interests,
+				}),
+				interests = fields.interests,
+				technologies = fields.technologies,
 				tell = function tell(event) {
-					console.log(event);
+					var html = ['<h3>Event triggered</h3>'];
+
+					switch(event.type) {
+						case 'taginserted':
+							html.push('<p><span>type</span>: ' + event.type + '<br /><span>field</span>: ' + event.srcName + '<br /><span>inserted</span>: ' + event.tagName + '</p>');
+							break;
+
+						case 'tagremoved':
+							html.push('<p><span>type</span>: ' + event.type + '<br /><span>field</span>: ' + event.srcName + '<br /><span>removed</span>: ' + event.tagName + '</p>');
+							break;
+
+						case 'fieldreset':
+							html.push('<p><span>type</span>: ' + event.type);
+							break;
+
+						default:
+							break;
+					}
+
+					preview.innerHTML = html.join('\n');
 				};
+				
+		events.forEach(function assignEvent(eventName) {
+			interests.on(eventName, tell);
+			technologies.on(eventName, tell);
+		});
 
-		console.log( interests.hasEvents() );
+		form.addEventListener('submit', submitHandler, false);
+		reset.addEventListener(clickOrTap, resetHandler, false);
+	
+		
+		technologies.addTags(
+			'Haskell',
+			'Erlang',
+			['more', 'blah', ['blubber']],
+			technologies.createTag('Rust'),
+			'Python'
+		);
 
-		interests.on('taginserted', tell);
-		interests.on('tagremoved', tell);
-		console.log( interests.hasEvents() );
 
-		/*
-		interests.off('taginserted', tell);
-		interests.off('tagremoved', tell);
-		console.log( interests.hasEvents() );
-		*/
-
-
-		form.addEventListener('submit', function submitHandler(event) {
-			var html = [], key, inst, tagString;
+		function submitHandler(event) {
+			var html = [],
+					key, inst, tagString;
 
 			for(key in fields) {
 				inst = fields[key],
@@ -114,7 +142,12 @@
 
 			preview.innerHTML = html.join('\n');
 			event.preventDefault();
-		}, false);
+		}
+
+		function resetHandler(event) {
+			interests.resetTags();
+			technologies.resetTags();
+		}
 
 	}).call(this);
 	</script>

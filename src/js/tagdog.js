@@ -1,5 +1,5 @@
 (function() {
-	
+
 	'use strict';
 
 	/*
@@ -204,7 +204,7 @@
 	var updateInstance = function updateInstance() {
 		var dummy = this.originalInput,
 				dummyValues = dummy.getAttribute('value');
-				
+
 		if(!dummyValues) return;
 
 		dummyValues.split(',').forEach(function addTags(tagName) {
@@ -224,7 +224,7 @@
 		if( !(this instanceof Tagdog) ) {
 			return new Tagdog(field, options);
 		}
-		
+
 		this.events = {};
 
 		createElements.call(this, field, options);
@@ -239,9 +239,9 @@
 
 	// Cleans tag names of unwanted characters.
 	Tagdog.prototype.cleanTagName = function cleanTagName(tagName) {
-		
+
 		tagName = this.ensureMaxLength(tagName);
-		
+
 		return this.options.patterns.reduce(function replacer(tagName, pattern) {
 			return tagName.replace(pattern.regex, pattern.replace || '');
 		}, tagName);
@@ -251,9 +251,9 @@
 	// Creates and returns new tag element.
 	Tagdog.prototype.createTagElement = function createTagElement(tagName, unsafe) {
 		var tagElement;
-				
+
 		if(this.hasTag(tagName)) return null;
-		
+
 		tagElement = document.createElement('span');
 		tagElement.textContent = unsafe ? tagName : this.cleanTagName(tagName);
 		tagElement.setAttribute('aria-hidden', true);
@@ -268,12 +268,12 @@
 	// Adds a new tag element to the current Tagdog instance.
 	Tagdog.prototype.insertTagElement = function insertTagElement(tagElement, duplicates) {
 		var tagName;
-		
+
 		if(!duplicates && this.hasTag(tagElement.textContent)) return null;
 		if(this.isMaxTags()) return null;
 
 		tagElement.classList.add('tagdog-tag');
-		
+
 		tagName = tagElement.textContent;
 
 		this.currentTags.push(tagName);
@@ -282,10 +282,13 @@
 		this.originalInput.value = '';
 
 		this.emit('taginserted', {
-			eventType: 'taginserted',
+			type: 'taginserted',
+			srcName: this.name,
 			srcElement: this.field,
+			currentTags: this.getTags(),
 			tagElement: tagElement,
-			tagName: tagName
+			tagName: tagName,
+			timestamp: Date.now()
 		});
 
 		return tagElement;
@@ -297,7 +300,19 @@
 		var tagElement = isHTMLElement(tag) ? tag : this.createTagElement(tag);
 		return this.insertTagElement(tagElement);
 	};
-	
+
+
+	// Adds multiple tags in the form of tag names, elements
+	// or arrays that consist of tag names and elements and
+	// returns all newly created tags.
+	Tagdog.prototype.addTags = function addTag(/* args */) {
+		var tags = slice.call(arguments);
+
+		return tags.map(function add(elem) {
+			return isArray(elem) ? this.addTags.apply(this, elem) : this.addTag(elem);
+		}, this);
+	};
+
 
 	// Checks whether a tag already exists.
 	Tagdog.prototype.hasTag = function hasTag(tag) {
@@ -322,10 +337,13 @@
 				tag = this.tagContainer.removeChild(tagElem);
 
 				this.emit('tagremoved', {
-					eventType: 'tagremoved',
+					type: 'tagremoved',
+					srcName: this.name,
 					srcElement: this.field,
+					currentTags: this.getTags(),
 					tagElement: tag,
-					tagName: tag.textContent
+					tagName: tag.textContent,
+			timestamp: Date.now()
 				});
 
 				return removed;
@@ -343,10 +361,13 @@
 		var tag = this.tagContainer.removeChild(tagElement);
 
 		this.emit('tagremoved', {
-			eventType: 'tagremoved',
+			type: 'tagremoved',
+			srcName: this.name,
 			srcElement: this.field,
+			currentTags: this.getTags(),
 			tagElement: tag,
-			tagName: tag.textContent
+			tagName: tag.textContent,
+			timestamp: Date.now()
 		});
 
 		return tag;
@@ -372,9 +393,11 @@
 		this.tagContainer.innerHTML = "";
 		this.currentTags.splice(0, this.currentTags.length);
 
-		this.emit('resetfield', {
-			eventType: 'resetfield',
-			srcElement: this.field
+		this.emit('fieldreset', {
+			type: 'fieldreset',
+			srcName: this.name,
+			srcElement: this.field,
+			timestamp: Date.now()
 		});
 	};
 
@@ -405,34 +428,26 @@
 
 	// Checks, whether the provided value is a NodeList.
 	Tagdog.prototype.isNodeList = isNodeList;
-	
+
 
 	// Alias of Tagdog#createTagElement. Already deprecated, will be removed in later versions.
 	Tagdog.prototype.createTag = Tagdog.prototype.createTagElement;
-	
-	
+
+
 	/*
 	 * Events
 	 **/
-	
-	Tagdog.prototype.hasEvents = function hasEvents() {
-		var events = this.events,
-				key;
-		
-		for(key in events) if(events[key] && events[key].length) return true;
-		return false;
-	};
-	
+
 	Tagdog.prototype.on = function on(eventName, callback) {
 		var events = this.events;
-	
+
 		events[eventName] = events[eventName] || [];
 		events[eventName].push(callback);
 	};
-	
+
 	Tagdog.prototype.off = function off(eventName, callback) {
 		var events = this.events, i, n;
-	
+
 		if(events[eventName]) {
 			for(i = 0, n = events[eventName].length; i < n; i++) {
 				if(events[eventName][i] === callback) {
@@ -442,22 +457,22 @@
 			}
 		}
 	};
-	
+
 	Tagdog.prototype.once = function once(eventName, callback) {
 		var self = this,
 		    events = this.events;
-	
+
 		var selfDeleting = function selfDeleting(event) {
 			callback(event);
 			self.off(eventName, selfDeleting);
 		};
-	
+
 		this.on(eventName, selfDeleting);
 	};
 
 	Tagdog.prototype.emit = function emit(eventName, eventData) {
 		var events = this.events, callback, i, n;
-	
+
 		if(events[eventName]) {
 			for(i = 0, n = events[eventName].length; i < n; i++) {
 				callback = events[eventName][i];
@@ -466,6 +481,14 @@
 				}
 			}
 		}
+	};
+
+	Tagdog.prototype.hasEvents = function hasEvents() {
+		var events = this.events,
+				key;
+
+		for(key in events) if(events[key] && events[key].length) return true;
+		return false;
 	};
 
 

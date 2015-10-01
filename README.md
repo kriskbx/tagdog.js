@@ -146,10 +146,30 @@ Resets the current Tagdog instance by removing all tags.
 Converts a value to a String first and then to lower case, so we can simply convert the whole currentTags Array to a lower case String. Explicitly returns the empty String for every value whose type is neither `String` nor `Array`.
 
 #### `isHTMLElement(value) -> {Boolean}`
-Checks, whether the provided value is an HTMLElement.
+Checks, whether the provided value is an `HTMLElement.`
 
 #### `isNodeList(value) -> {Boolean}`
 Checks, whether the provided value is a NodeList.
+
+#### Methods available starting with v0.1.0
+
+#### `addTags(tag_1 [[, tag_2 [, tag_n]]) -> {Array}`
+Convenience function that adds one or multiple tags whereby tags can be tag names, tag elements or arrays of tag names and/or tag elements. `addTags` is recursive, so you can also provide several arrays or even nested ones. The return value is an array of all newly created tags in the form of HTMLElements.
+
+#### `on(eventName, callback) -> {void}`
+Subscribe to custom events via the pub/sub pattern. When `eventName` is emitted (see `emit` below) the provided `callback` will be called. Remember to provide named `callback` functions in case you want to unsubscribe to `eventName` later.
+
+#### `off(eventName, callback) -> {void}`
+Unsubscribe from `eventName`. As with `on` above, `callback` needs to be a named function, of course.
+
+#### `once(eventName, callback) -> {void}`
+Subscribe to `eventName` once, which means `callback` will be called once and then automatically unsubscribe from `eventName`. At the risk of sounding like a broken record, please name your `callback`, otherwise `once` cannot work.
+
+#### `emit(eventName [, eventData]) -> {void}`
+Emits `eventname` and, if provided, passes `eventData` to all callback functions setup via `on` and `once`.
+
+#### `hasEvents() -> {Boolean}`
+Checks, whether the current instance currently has subscribers listening for events.
 
 
 ## 7. Styling
