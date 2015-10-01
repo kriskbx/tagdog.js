@@ -156,6 +156,19 @@ Checks, whether the provided value is a NodeList.
 #### `addTags(tag_1 [[, tag_2 [, tag_n]]) -> {Array}`
 Convenience function that adds one or multiple tags whereby tags can be tag names, tag elements or arrays of tag names and/or tag elements. `addTags` is recursive, so you can also provide several arrays or even nested ones. The return value is an array of all newly created tags in the form of HTMLElements.
 
+**Example:**
+
+```javascript
+languages.addTags(
+	'Haskell',
+	'ML',
+	['Erlang', 'Elixir', ['Clojure']],
+	[languages.createTag('Python'), languages.createTag('Rust')]
+);
+```
+
+Will create eight tags on the instance `languages`.
+
 #### `on(eventName, callback) -> {void}`
 Subscribe to custom events via the pub/sub pattern. When `eventName` is emitted (see `emit` below) the provided `callback` will be called. Remember to provide named `callback` functions in case you want to unsubscribe to `eventName` later.
 
@@ -170,6 +183,38 @@ Emits `eventname` and, if provided, passes `eventData` to all callback functions
 
 #### `hasEvents() -> {Boolean}`
 Checks, whether the current instance currently has subscribers listening for events.
+
+**Event examples**
+
+Tagdog has three emitters set by default: 
+
+1. `taginserted`
+emitted whenever a new tag is added to a Tagdog instance.
+2. `tagremoved`
+emitted whenever a tag is removed from a Tagdog instance
+3. `fieldreset`
+emitted when an instance is reset
+
+You can either subscribe to these default events, like this:
+
+```javascript
+languages.on('taginserted', function insertedHandler(event) {
+	console.log(event);
+});
+```
+
+Or create your own and emit them, for example in your own functions added via `protoProps` or `staticProps` during instantiation.
+```javascript
+languages.on('customevent', function customHandler(event) {
+	console.log(event.custom);
+});
+
+languages.emit('customevent', {
+	custom: 'data'
+});
+
+// Logs: 'data'
+```
 
 
 ## 7. Styling
