@@ -167,7 +167,7 @@ languages.addTags(
 );
 ```
 
-Will create eight tags on the instance `languages`.
+Will create seven tags on the instance `languages`.
 
 #### `on(eventName, callback) -> {void}`
 Subscribe to custom events via the pub/sub pattern. When `eventName` is emitted (see `emit` below) the provided `callback` will be called. Remember to provide named `callback` functions in case you want to unsubscribe to `eventName` later.
