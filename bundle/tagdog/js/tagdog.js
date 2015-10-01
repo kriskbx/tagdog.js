@@ -135,15 +135,6 @@
 		this.originalInput.focus();
 	};
 
-	var triggerNativeEvent = function triggerNativeEvent(element, name) {
-		if (document.createEvent) {
-			var event = document.createEvent('HTMLEvents');
-			event.initEvent(name, true, false);
-			element.dispatchEvent(event);
-		} else {
-			element.fireEvent(name);
-		}
-	};
 
 	/**
 	 * Private setup functions. Avoid polluting the instance API with
@@ -233,6 +224,8 @@
 		if( !(this instanceof Tagdog) ) {
 			return new Tagdog(field, options);
 		}
+		
+		this.events = {};
 
 		createElements.call(this, field, options);
 		addListeners.call(this);
@@ -274,17 +267,26 @@
 
 	// Adds a new tag element to the current Tagdog instance.
 	Tagdog.prototype.insertTagElement = function insertTagElement(tagElement, duplicates) {
+		var tagName;
+		
 		if(!duplicates && this.hasTag(tagElement.textContent)) return null;
 		if(this.isMaxTags()) return null;
 
 		tagElement.classList.add('tagdog-tag');
+		
+		tagName = tagElement.textContent;
 
-		this.currentTags.push(tagElement.textContent);
+		this.currentTags.push(tagName);
 		this.tagContainer.appendChild(tagElement);
 		this.hiddenInput.value = this.currentTags.join(',');
 		this.originalInput.value = '';
 
-		triggerNativeEvent(this.field, 'change');
+		this.emit('taginserted', {
+			eventType: 'taginserted',
+			srcElement: this.field,
+			tagElement: tagElement,
+			tagName: tagName
+		});
 
 		return tagElement;
 	};
@@ -319,7 +321,12 @@
 			if(tagElem.textContent === tag) {
 				tag = this.tagContainer.removeChild(tagElem);
 
-				triggerNativeEvent(this.field, 'change');
+				this.emit('tagremoved', {
+					eventType: 'tagremoved',
+					srcElement: this.field,
+					tagElement: tag,
+					tagName: tag.textContent
+				});
 
 				return removed;
 			}
@@ -335,7 +342,12 @@
 		this.hiddenInput.value = this.currentTags.join(",");
 		var tag = this.tagContainer.removeChild(tagElement);
 
-		triggerNativeEvent(this.field, 'change');
+		this.emit('tagremoved', {
+			eventType: 'tagremoved',
+			srcElement: this.field,
+			tagElement: tag,
+			tagName: tag.textContent
+		});
 
 		return tag;
 	};
@@ -360,7 +372,10 @@
 		this.tagContainer.innerHTML = "";
 		this.currentTags.splice(0, this.currentTags.length);
 
-		triggerNativeEvent(this.field, 'change');
+		this.emit('resetfield', {
+			eventType: 'resetfield',
+			srcElement: this.field
+		});
 	};
 
 
@@ -394,6 +409,64 @@
 
 	// Alias of Tagdog#createTagElement. Already deprecated, will be removed in later versions.
 	Tagdog.prototype.createTag = Tagdog.prototype.createTagElement;
+	
+	
+	/*
+	 * Events
+	 **/
+	
+	Tagdog.prototype.hasEvents = function hasEvents() {
+		var events = this.events,
+				key;
+		
+		for(key in events) if(events[key] && events[key].length) return true;
+		return false;
+	};
+	
+	Tagdog.prototype.on = function on(eventName, callback) {
+		var events = this.events;
+	
+		events[eventName] = events[eventName] || [];
+		events[eventName].push(callback);
+	};
+	
+	Tagdog.prototype.off = function off(eventName, callback) {
+		var events = this.events, i, n;
+	
+		if(events[eventName]) {
+			for(i = 0, n = events[eventName].length; i < n; i++) {
+				if(events[eventName][i] === callback) {
+					events[eventName].splice(i, 1);
+					break;
+				}
+			}
+		}
+	};
+	
+	Tagdog.prototype.once = function once(eventName, callback) {
+		var self = this,
+		    events = this.events;
+	
+		var selfDeleting = function selfDeleting(event) {
+			callback(event);
+			self.off(eventName, selfDeleting);
+		};
+	
+		this.on(eventName, selfDeleting);
+	};
+
+	Tagdog.prototype.emit = function emit(eventName, eventData) {
+		var events = this.events, callback, i, n;
+	
+		if(events[eventName]) {
+			for(i = 0, n = events[eventName].length; i < n; i++) {
+				callback = events[eventName][i];
+				if(callback) {
+					callback(eventData || {});
+				}
+			}
+		}
+	};
 
 
 	/*

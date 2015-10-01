@@ -79,6 +79,24 @@
 				});
 
 
+		var interests = fields.interests,
+				tell = function tell(event) {
+					console.log(event);
+				};
+
+		console.log( interests.hasEvents() );
+
+		interests.on('taginserted', tell);
+		interests.on('tagremoved', tell);
+		console.log( interests.hasEvents() );
+
+		/*
+		interests.off('taginserted', tell);
+		interests.off('tagremoved', tell);
+		console.log( interests.hasEvents() );
+		*/
+
+
 		form.addEventListener('submit', function submitHandler(event) {
 			var html = [], key, inst, tagString;
 
