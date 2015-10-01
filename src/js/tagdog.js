@@ -145,6 +145,7 @@
 		}
 	};
 
+
 	/**
 	 * Private setup functions. Avoid polluting the instance API with
 	 * setup functions that should be called only once. rather call the
@@ -233,6 +234,8 @@
 		if( !(this instanceof Tagdog) ) {
 			return new Tagdog(field, options);
 		}
+		
+		this.events = {};
 
 		createElements.call(this, field, options);
 		addListeners.call(this);
@@ -394,6 +397,56 @@
 
 	// Alias of Tagdog#createTagElement. Already deprecated, will be removed in later versions.
 	Tagdog.prototype.createTag = Tagdog.prototype.createTagElement;
+	
+	
+	/*
+	 * Events
+	 **/
+	
+	Tagdog.prototype.on = function on(eventName, callback) {
+		var events = this.events;
+	
+		events[eventName] = events[eventName] || [];
+		events[eventName].push(callback);
+	};
+	
+	Tagdog.prototype.off = function off(eventName, callback) {
+		var events = this.events, i, n;
+	
+		if(events[eventName]) {
+			for(i = 0, n = events[eventName].length; i < n; i++) {
+				if(events[eventName][i] === callback) {
+					events[eventName].splice(i, 1);
+					break;
+				}
+			}
+		}
+	};
+	
+	Tagdog.prototype.once = function once(eventName, callback) {
+		var self = this,
+		    events = this.events;
+	
+		var selfDeleting = function selfDeleting(event) {
+			callback(event);
+			self.off(eventName, selfDeleting);
+		};
+	
+		this.on(eventName, selfDeleting);
+	};
+
+	Tagdog.prototype.emit = function emit(eventName, eventData) {
+		var events = this.events, callback, i, n;
+	
+		if(events[eventName]) {
+			for(i = 0, n = events[eventName].length; i < n; i++) {
+				callback = events[eventName][i];
+				if(callback) {
+					callback(eventData || {});
+				}
+			}
+		}
+	};
 
 
 	/*
