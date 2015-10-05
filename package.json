@@ -1,13 +1,18 @@
 {
   "name": "tagdog.js",
   "version": "0.1.0",
-  "description": "A JavaScript plugin for tag input fields.",
-  "main": "./example/index.html",
+  "description": "A JavaScript plugin that turns text input fields into tag input fields.",
+  "main": "./bundle/example.html",
   "directories": {
-    "example": "example"
+    "bundle": "bundle",
+    "src": "src"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/Odiumediae/modality.git"
   },
   "keywords": [
     "tags",
@@ -17,7 +22,7 @@
     "components",
     "plugin"
   ],
-  "author": "Letmecode <odiumediae@gmail.com>",
+  "author": "Letmecode <odiumediae@gmail.com> (https://letmeco.de)",
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.0",
