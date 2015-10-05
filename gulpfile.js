@@ -32,7 +32,6 @@ gulp.task('serve', ['build'], function() {
 	gulp.watch('./src/**/*.html', ['copy-html']);
 });
 
-
 gulp.task('clean', function () {
   return del(['example']);
 });

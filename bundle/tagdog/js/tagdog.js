@@ -68,6 +68,19 @@
 	var qsa = function qsa(selector, element) {
 		return (element || document).querySelectorAll(selector);
 	};
+	
+	var addClass = function addClass(element, className) {
+		var classes = element.className.split(/\s+/);
+
+		if(classes.indexOf(className) === -1) {
+			classes.push(className);
+		}
+
+		element.className = classes.join(' ');
+	};
+	
+	var bla = document.createElement('p');
+	console.log('className', bla.className === "");
 
 	// A basic extend function always helps making things easier.
 	var extend = function extend(receiver /*, emitters */) {
@@ -161,7 +174,8 @@
 
 		// Assign the Tagdog element and add the actual tagdog CSS class, if not already defined.
 		this.field = isHTMLElement(field) ? field : qs(field);
-		this.field.classList.add('tagdog-field');
+		// this.field.classList.add('tagdog-field');
+		addClass(this.field, 'tagdog-field');
 
 		// This is where the tags are saved.
 		this.currentTags = [];
@@ -273,7 +287,7 @@
 		if(!duplicates && this.hasTag(tagElement.textContent)) return null;
 		if(this.isMaxTags()) return null;
 
-		tagElement.classList.add('tagdog-tag');
+		addClass(tagElement, 'tagdog-tag');
 
 		tagName = tagElement.textContent;
 
