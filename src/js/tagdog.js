@@ -71,16 +71,11 @@
 	
 	var addClass = function addClass(element, className) {
 		var classes = element.className.split(/\s+/);
-		
 		if(classes.indexOf(className) === -1) {
 			classes.push(className);
 		}
-		
 		element.className = classes.join(' ');
 	};
-	
-	var bla = document.createElement('p');
-	console.log('className', bla.className === "");
 
 	// A basic extend function always helps making things easier.
 	var extend = function extend(receiver /*, emitters */) {
