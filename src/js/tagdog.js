@@ -71,11 +71,11 @@
 	
 	var addClass = function addClass(element, className) {
 		var classes = element.className.split(/\s+/);
-
+		
 		if(classes.indexOf(className) === -1) {
 			classes.push(className);
 		}
-
+		
 		element.className = classes.join(' ');
 	};
 	
